@@ -16,7 +16,6 @@ let started = false;
 $(document).keydown(function () {
   if (!started) {
     nextSequence();
-    $("#level-title").text("Level " + level);
     started = true;
   } else {
   }
@@ -49,7 +48,8 @@ $(".btn").click(function () {
 
   playSound(userChosenColor);
   animatePress(userChosenColor);
-  checkAnswer(level);
+
+  checkAnswer(userClickedPattern.length - 1);
 });
 
 // A function that plays an appropirate sound for each color
@@ -69,25 +69,22 @@ function animatePress(currentColor) {
 
 // A function that checks if a user gets the answer right or not
 function checkAnswer(currentLevel) {
-  if (userClickedPattern[currentLevel - 1] === gamePattern[currentLevel - 1]) {
-    console.log("success");
+  if (gamePattern[currentLevel] === userClickedPattern[currentLevel]) {
     if (userClickedPattern.length === gamePattern.length) {
       setTimeout(function () {
         nextSequence();
       }, 1000);
     }
-  } else if (userClickedPattern.length === gamePattern.length) {
-    console.log("failure");
-    var audio = new Audio("sounds/wrong.mp3");
-    audio.play();
+  } else {
+    playSound("wrong");
     $("body").addClass("game-over");
+    $("#level-title").text("Game Over, Press Any Key to Restart");
+
     setTimeout(function () {
       $("body").removeClass("game-over");
     }, 200);
-    $("h1").text("Game Over, Press Any Key to Restart");
+
     startOver();
-  } else {
-    console.log("You can do this!");
   }
 }
 
